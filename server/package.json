@@ -1,0 +1,19 @@
+{
+  "name": "quick-chat-server",
+  "version": "1.0.0",
+  "description": "real time chatting application",
+  "license": "ISC",
+  "author": "love coding geetha",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
