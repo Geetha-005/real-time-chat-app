@@ -1,5 +1,33 @@
 const express=require('express')
+// const dbconfig=require('./config/db.config.js')
+const authrouter=require('./controllers/auth.controller.js')
 
+
+
+const connectDB = require('./config/db.config');
+
+// Connect to DB
+
+const dotenv=require('dotenv')
 const app=express()
+//dotenv.config({path:'./config.env'})
+require('dotenv').config();
+app.use(express.json())
+app.use('/api/auth',authrouter)
 
-module.exports=app
+
+
+const port=process.env.PORT_NUMBER||4000
+app.listen(port,()=>{
+    console.log(`listening to requests on port:${port}`)
+    connectDB();
+})
+
+
+
+//http://localhost:6000/api/auth/signup
+
+
+//ZE5mt1CycG5SV1S7
+//geetachilla4
+//mongodb+srv://geetachilla4:<db_password>@cluster0.2qfcrod.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
