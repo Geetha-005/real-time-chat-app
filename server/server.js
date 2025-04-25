@@ -1,8 +1,10 @@
 const express=require('express')
 // const dbconfig=require('./config/db.config.js')
 const authrouter=require('./controllers/auth.controller.js')
+const userrouter=require('./controllers/user.controllers.js')
+const chatrouter=require('./controllers/chat.controller.js')
 
-
+require('dotenv').config();
 
 const connectDB = require('./config/db.config');
 
@@ -11,10 +13,11 @@ const connectDB = require('./config/db.config');
 const dotenv=require('dotenv')
 const app=express()
 //dotenv.config({path:'./config.env'})
-require('dotenv').config();
+
 app.use(express.json())
 app.use('/api/auth',authrouter)
-
+app.use('/api/user',userrouter)
+app.use('/api/chat',chatrouter)
 
 
 const port=process.env.PORT_NUMBER||4000

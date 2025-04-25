@@ -10,7 +10,7 @@ router.post("/signup",async(req,res)=>{
        const user= await User.findOne({email:req.body.email})
        
        if(user){
-      return  res.send({
+      return  res.status(400).send({
         message:"alreadu exisetd",
         success:true
        })
@@ -21,14 +21,15 @@ router.post("/signup",async(req,res)=>{
     req.body.password=hashedPassword
     const newUser=new User(req.body)
     await newUser.save()
-    res.send({
-        message:'user created successfully'
+    res.status(201).send({
+        message:'user created successfully',
+        success:true
     })
 
     }
     catch(error){
          res.send({
-            message:"error.message",
+            message:error.message,
             successs:false
          })
     }
@@ -36,47 +37,96 @@ router.post("/signup",async(req,res)=>{
 
 })
 
-router.post('/login',async(req,res)=>{
 
-    try{
-        // check if user exists
-        const user=await User.findOne({email:req.body.email})
-        if(!user){
-            return res.send({message:"user does not exist",
-                success:false
-            })
-        }
+// router.post('/login',async(req,res)=>{
 
-
-        // password checking
-        const isValid=await bcrypt.compare(req.body.password,user.password)
-        if(!isValid){
-            return res.send({
-                message:"invalid password try again",
-                success:false
-            })
-        }
+//     try{
+//         // check if user exists
+//         const user=await User.findOne({email:req.body.email})
+//         if(!user){
+//             return res.status(400).send({message:"user does not exist",
+//                 success:false
+//             })
+//         }
 
 
-        // create a josn web token
-        const token=jwt.sign({userId:user._id},process.env.SECRET_KEY,{expiresIn:"7d"})
+//         // password checking
+//         const isValid=await bcrypt.compare(req.body.password,user.password)
+//         if(!isValid){
+//             return res.status(400).send({
+//                 message:"invalid password try again",
+//                 success:false
+//             })
+//         }
 
-        res.send({
-            message:"user logged successfully",
-            success:true,
-            token:token
-        })
 
-    }
-    catch(error){
-        res.send({
-            message:error.message,
-            success:false
-        })
+//         // create a josn web token
+//         const token=jwt.sign({userId:user._id},process.env.SECRET_KEY,{expiresIn:"1d"})
 
-    }
+//         res.send({
+//             message:"user logged successfully",
+//             success:true,
+//             token:token
+//         })
+
+//     }
+//     catch(error){
+//         res.status(400).send({
+//             message:error.message,
+//             success:false
+//         })
+
+//     }
     
-})
+// })
+
+
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).send({
+                message: "Email and password are required",
+                success: false
+            });
+        }
+
+        // Select password explicitly if it's excluded by default
+        const user = await User.findOne({ email }).select('+password');
+        if (!user) {
+            return res.status(400).send({
+                message: "User does not exist",
+                success: false
+            });
+        }
+
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
+            return res.status(400).send({
+                message: "Invalid password. Try again.",
+                success: false
+            });
+        }
+
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY || 'defaultSecret', {
+            expiresIn: "1d"
+        });
+
+        res.status(200).send({
+            message: "User logged in successfully",
+            success: true,
+            token
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            message: "Something went wrong. Please try again later.",
+            success: false
+        });
+    }
+});
 
 
 
