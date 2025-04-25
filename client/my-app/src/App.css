@@ -1,0 +1,5 @@
+/* Fix toast visibility */
+div.__react-hot-toast-container {
+  z-index: 9999 !important;
+  position: fixed !important;
+}

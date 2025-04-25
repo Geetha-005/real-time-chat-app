@@ -83,7 +83,8 @@ router.post("/signup",async(req,res)=>{
 
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const {email,password} = req.body;
+        console.log("Request body:", req.body);
 
         if (!email || !password) {
             return res.status(400).send({
@@ -95,7 +96,7 @@ router.post('/login', async (req, res) => {
         // Select password explicitly if it's excluded by default
         const user = await User.findOne({ email }).select('+password');
         if (!user) {
-            return res.status(400).send({
+            return res.status(400).end({
                 message: "User does not exist",
                 success: false
             });
@@ -113,7 +114,7 @@ router.post('/login', async (req, res) => {
             expiresIn: "1d"
         });
 
-        res.status(200).send({
+        res.status(201).send({
             message: "User logged in successfully",
             success: true,
             token
