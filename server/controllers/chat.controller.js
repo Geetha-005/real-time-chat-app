@@ -29,7 +29,7 @@ router.get('/get-all-chats',authMiddleware,async(req,res)=>{
         res.status(200).send({
             message:'chat fetched successfully',
             success:true,
-            allChat
+            data:allChat
         }) 
 
     }

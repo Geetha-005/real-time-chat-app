@@ -10,7 +10,7 @@ router.get('/logged', authMiddleware, async (req, res) => {
 
         res.send({
             message: "Access granted",
-            user,
+            data:user,
             success: true
         });
     } catch (error) {
@@ -28,7 +28,7 @@ router.get('/getall', authMiddleware, async (req, res) => {
 
         res.send({
             message: "Access granted",
-            allUser,
+           data: allUser,
             success: true
         });
     } catch (error) {

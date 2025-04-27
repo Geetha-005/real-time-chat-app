@@ -1,24 +1,30 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { login } from '../../APIcalls/auth'
 import {toast} from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { hideLoader, showLoader } from '../../redux/loaderSlice'
 
 function Login(){
+    const dispatch=useDispatch()
+
     const[user,setUser]=React.useState({
         email:"",
         password:""
     })
+    const navigate=useNavigate()
 
     async function handleLogin(e){
         e.preventDefault()
         let response=null
         try{
+            dispatch(showLoader())
             response=await login(user)
+            dispatch(hideLoader())
             if(response.success){
                 toast.success(response.message)
                 localStorage.setItem('token',response.token)
-                window.location.href="/"
-
+                navigate("/")
             } 
             else{
                 toast.error(response.success)
@@ -26,7 +32,8 @@ function Login(){
 
         }
         catch(error){
-            alert(response.message)
+            dispatch(hideLoader())
+            toast.error(response.message)
         }
 
     }
