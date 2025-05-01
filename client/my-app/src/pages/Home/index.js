@@ -11,6 +11,7 @@ function Home(){
         <Sidebar />
          {/* <!--SIDEBAR LAYOUT-->
          <!--CHAT AREA LAYOUT--> */}
+         <h1>this is home page</h1>
          <Chat />
 
     </div>
